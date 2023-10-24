@@ -2,6 +2,7 @@ export function createDOM(node) {
     if (typeof node === "string") {
         return document.createTextNode(node);
     }
+
     const element = document.createElement(node.tag);
 
     Object.entries(node.props).forEach(([name, value]) =>
@@ -14,11 +15,9 @@ export function createDOM(node) {
 }
 
 export function createElement(tag, props, ...children) {
-    return {
-        tag,
-        props,
-        children,
-    };
+    props = props || {};
+
+    return { tag, props, children };
 }
 
 export function render(vdom, container) {
