@@ -1,25 +1,38 @@
+
 export function createDOM(node) {
-    if (typeof node === "string") {
-        return document.createTextNode(node);
-    }
+  if (typeof node === 'string') {
+    return document.createTextNode(node);
+  }
 
-    const element = document.createElement(node.tag);
+  const element = document.createElement(node.tag);
 
-    Object.entries(node.props).forEach(([name, value]) =>
-        element.setAttribute(name, value)
-    );
+  Object.entries(node.props)
+    .forEach(([name, value]) => element.setAttribute(name, value));
 
-    node.children.map(createDOM).forEach(element.appendChild.bind(element));
+  node.children
+    .map(createDOM)
+    .forEach(element.appendChild.bind(element));
 
-    return element;
+  return element;
 }
 
 export function createElement(tag, props, ...children) {
-    props = props || {};
-
+  props = props || {};
+  
+  if (typeof tag === 'function') {
+    if (children.length > 0) {
+      return tag({
+        ...props,
+        children: children.length === 1 ? children[0] : children,
+      })
+    } else {
+      return tag(props);
+    }
+  } else {
     return { tag, props, children };
+  }
 }
 
 export function render(vdom, container) {
-    container.appendChild(createDOM(vdom));
+  container.appendChild(createDOM(vdom));  
 }
